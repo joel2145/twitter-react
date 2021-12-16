@@ -69,11 +69,11 @@ export const Auth: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   const signInEmail = async () => {
-    // await auth.signInWithEmailAndPassword(email, password);
+    await auth.signInWithEmailAndPassword(email, password);
     console.log("signInEmail");
   };
   const signUpEmail = async () => {
-    // await auth.createUserWithEmailAndPassword(email, password);
+    await auth.createUserWithEmailAndPassword(email, password);
     console.log("signUpEmail");
   };
   const signInGoogle = async () => {
@@ -124,14 +124,28 @@ export const Auth: React.FC = () => {
               }
             />
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
-              // {...(isLogin
-              //   ? (onclick = () => signInEmail())
-              //   : (onclick = () => signUpEmail()))}
+              startIcon={<EmailIcon />}
+              onClick={
+                isLogin
+                  ? async () => {
+                      try {
+                        await signInEmail();
+                      } catch (err: any) {
+                        alert(err.message);
+                      }
+                    }
+                  : async () => {
+                      try {
+                        await signUpEmail();
+                      } catch (err: any) {
+                        alert(err.message);
+                      }
+                    }
+              }
             >
               {isLogin ? "ログイン" : "新規登録"}
             </Button>
