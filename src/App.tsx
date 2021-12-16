@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./App.module.css";
-import Auth from "./components/Auth";
+import { Auth } from "./components/Auth";
 import Feed from "./components/Feed";
 import { selectUser, login, logout } from "./features/userSlice";
 import { auth } from "./firebase";
