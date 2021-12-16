@@ -21,6 +21,8 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import styles from "./Auth.module.scss";
 import { auth, provider, storage } from "../firebase";
+import { setupMaster } from "cluster";
+import { cursorTo } from "readline";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,10 +56,26 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  pointer: {
+    cursor: "pointer",
+  },
 }));
 
 export const Auth: React.FC = () => {
   const classes = useStyles();
+  const [email, setEmail] = useState("");
+  const [password, setPassWord] = useState("");
+  // ログイン画面とセットアップ画面の切り替え
+  const [isLogin, setIsLogin] = useState(true);
+
+  const signInEmail = async () => {
+    // await auth.signInWithEmailAndPassword(email, password);
+    console.log("signInEmail");
+  };
+  const signUpEmail = async () => {
+    // await auth.createUserWithEmailAndPassword(email, password);
+    console.log("signUpEmail");
+  };
   const signInGoogle = async () => {
     await auth.signInWithPopup(provider).catch((err) => alert(err.message));
   };
@@ -72,7 +90,7 @@ export const Auth: React.FC = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            {isLogin ? "ログイン" : "新規登録"}
           </Typography>
           <form className={classes.form} noValidate>
             <TextField
@@ -81,10 +99,14 @@ export const Auth: React.FC = () => {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="メールアドレス"
               name="email"
               autoComplete="email"
               autoFocus
+              value={email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
             />
             <TextField
               variant="outlined"
@@ -92,10 +114,14 @@ export const Auth: React.FC = () => {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="パスワード"
               type="password"
               id="password"
               autoComplete="current-password"
+              value={password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassWord(e.target.value)
+              }
             />
             <Button
               type="submit"
@@ -103,9 +129,29 @@ export const Auth: React.FC = () => {
               variant="contained"
               color="primary"
               className={classes.submit}
+              // {...(isLogin
+              //   ? (onclick = () => signInEmail())
+              //   : (onclick = () => signUpEmail()))}
             >
-              Sign In
+              {isLogin ? "ログイン" : "新規登録"}
             </Button>
+
+            <Grid container>
+              <Grid item xs>
+                <span>パスワードをお忘れですか？</span>
+              </Grid>
+              <Grid item xs>
+                <span
+                  onClick={() => setIsLogin(!isLogin)}
+                  className={classes.pointer}
+                >
+                  {isLogin
+                    ? "新規登録はこちら"
+                    : "既にアカウントをお持ちの方はこちら"}
+                </span>
+              </Grid>
+            </Grid>
+
             <Button
               fullWidth
               variant="contained"
@@ -113,7 +159,7 @@ export const Auth: React.FC = () => {
               className={classes.submit}
               onClick={() => signInGoogle()}
             >
-              Sign In With Google
+              Googleアカウントでログインする
             </Button>
           </form>
         </div>
