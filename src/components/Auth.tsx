@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
   pointer: {
     cursor: "pointer",
+    color: "blue",
   },
 }));
 
@@ -65,16 +66,30 @@ export const Auth: React.FC = () => {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
-  // ログイン画面とセットアップ画面の切り替え
+  const [username, setUsername] = useState("");
+  // const [avatarImage, setAvatarImage] = useState<File | null>(null);
+
+  // ログイン画面と新規登録画面の切り替え
   const [isLogin, setIsLogin] = useState(true);
+
+  // const onChangeImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files![0]) {
+  //     setAvatarImage(e.target.files![0]);
+  //     e.target.value = "";
+  //   }
+  // };
 
   const signInEmail = async () => {
     await auth.signInWithEmailAndPassword(email, password);
-    console.log("signInEmail");
   };
   const signUpEmail = async () => {
-    await auth.createUserWithEmailAndPassword(email, password);
-    console.log("signUpEmail");
+    const authUser = await auth.createUserWithEmailAndPassword(email, password);
+    // console.log(authUser);
+    // let url = "";
+    // if (avatarImage) {
+    //   await storage.ref(`avatars/${fileName}`).put(avatarImage);
+    //   url = await storage.ref("avatars").child(fileName).getDownloadURL();
+    // }
   };
   const signInGoogle = async () => {
     await auth.signInWithPopup(provider).catch((err) => alert(err.message));
@@ -154,7 +169,7 @@ export const Auth: React.FC = () => {
               <Grid item xs>
                 <span>パスワードをお忘れですか？</span>
               </Grid>
-              <Grid item xs>
+              <Grid item>
                 <span
                   onClick={() => setIsLogin(!isLogin)}
                   className={classes.pointer}
