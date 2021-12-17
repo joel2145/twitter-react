@@ -24,6 +24,7 @@ import { auth, provider, storage } from "../firebase";
 import { setupMaster } from "cluster";
 import { cursorTo } from "readline";
 
+// スタイリング
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
@@ -60,39 +61,57 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     color: "blue",
   },
+  modal: {
+    outline: "none",
+    position: "absolute",
+    width: 400,
+    borderRadius: 10,
+    backgroundColor: "white",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(10),
+  },
 }));
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 export const Auth: React.FC = () => {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
-  const [username, setUsername] = useState("");
-  // const [avatarImage, setAvatarImage] = useState<File | null>(null);
-
+  const [openModal, setOpenModal] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
   // ログイン画面と新規登録画面の切り替え
   const [isLogin, setIsLogin] = useState(true);
 
-  // const onChangeImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files![0]) {
-  //     setAvatarImage(e.target.files![0]);
-  //     e.target.value = "";
-  //   }
-  // };
-
+  // いろいろな関数
   const signInEmail = async () => {
     await auth.signInWithEmailAndPassword(email, password);
   };
   const signUpEmail = async () => {
-    const authUser = await auth.createUserWithEmailAndPassword(email, password);
-    // console.log(authUser);
-    // let url = "";
-    // if (avatarImage) {
-    //   await storage.ref(`avatars/${fileName}`).put(avatarImage);
-    //   url = await storage.ref("avatars").child(fileName).getDownloadURL();
-    // }
+    await auth.createUserWithEmailAndPassword(email, password);
   };
   const signInGoogle = async () => {
     await auth.signInWithPopup(provider).catch((err) => alert(err.message));
+  };
+  const sendResetEmail = async () => {
+    await auth
+      .sendPasswordResetEmail(resetEmail)
+      .then(() => {
+        setOpenModal(false);
+        setResetEmail("");
+      })
+      .catch((err) => {
+        alert(err.message);
+        setResetEmail("");
+      });
   };
 
   return (
@@ -107,6 +126,8 @@ export const Auth: React.FC = () => {
           <Typography component="h1" variant="h5">
             {isLogin ? "ログイン" : "新規登録"}
           </Typography>
+
+          {/* Emailとパスワードの認証機能 */}
           <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
@@ -165,9 +186,15 @@ export const Auth: React.FC = () => {
               {isLogin ? "ログイン" : "新規登録"}
             </Button>
 
+            {/* パスワードリセットと切り替えボタン */}
             <Grid container>
               <Grid item xs>
-                <span>パスワードをお忘れですか？</span>
+                <span
+                  onClick={() => setOpenModal(true)}
+                  className={classes.pointer}
+                >
+                  パスワードをお忘れですか？
+                </span>
               </Grid>
               <Grid item>
                 <span
@@ -181,16 +208,41 @@ export const Auth: React.FC = () => {
               </Grid>
             </Grid>
 
+            {/* googleアカウントでの認証機能 */}
             <Button
               fullWidth
               variant="contained"
               color="primary"
               className={classes.submit}
               onClick={() => signInGoogle()}
+              startIcon={<CameraIcon />}
             >
               Googleアカウントでログインする
             </Button>
           </form>
+
+          {/* パスワードリセットのモーダル */}
+          <Modal
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+          >
+            <div style={getModalStyle()} className={classes.modal}>
+              <TextField
+                name="email"
+                label="email"
+                type="email"
+                value={resetEmail}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setResetEmail(e.target.value)
+                }
+              ></TextField>
+              <IconButton onClick={() => sendResetEmail()}>
+                <SendIcon></SendIcon>
+              </IconButton>
+            </div>
+          </Modal>
         </div>
       </Grid>
     </Grid>
