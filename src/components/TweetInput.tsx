@@ -71,7 +71,7 @@ export const TweetInput = () => {
     <>
       <form onSubmit={sendTweet}>
         <div className={styles.tweet_form}>
-          <p>input</p>
+          {user.displayName && <p>Hello！{user.displayName}!</p>}
           <input
             className={styles.tweet_input}
             placeholder="今何してる？"
@@ -87,9 +87,24 @@ export const TweetInput = () => {
                   tweetImg ? styles.tweet_addIconLoaded : styles.tweet_addIcon
                 }
               />
+              <input
+                className={styles.tweet_hiddenIcon}
+                placeholder="今何してる？"
+                type="file"
+                onChange={(e) => onChangeImageHandler(e)}
+              ></input>
             </label>
           </IconButton>
         </div>
+        <Button
+          type="submit"
+          disabled={!tweetMsg}
+          className={
+            tweetMsg ? styles.tweet_sendBtn : styles.tweet_sendDisableBtn
+          }
+        >
+          Tweet
+        </Button>
       </form>
     </>
   );
