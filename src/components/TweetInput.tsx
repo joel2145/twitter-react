@@ -8,7 +8,7 @@ import { auth, db, storage } from "../firebase";
 import { selectUser } from "../features/userSlice";
 import styles from "./TweetInput.module.css";
 
-export const TweetInput = () => {
+export const TweetInput: React.FC = () => {
   const user = useSelector(selectUser);
   const [tweetMsg, setTweetMsg] = useState("");
   const [tweetImg, setTweetImg] = useState<File | null>(null);
@@ -46,7 +46,7 @@ export const TweetInput = () => {
             .child(fileName)
             .getDownloadURL()
             .then(async (url) => {
-              await db.collection("post").add({
+              await db.collection("posts").add({
                 image: url,
                 text: tweetMsg,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -62,6 +62,7 @@ export const TweetInput = () => {
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         username: user.displayName,
       });
+      console.log(user.displayName);
     }
     setTweetImg(null);
     setTweetMsg("");

@@ -23,6 +23,7 @@ import styles from "./Auth.module.scss";
 import { auth, provider, storage } from "../firebase";
 import { setupMaster } from "cluster";
 import { cursorTo } from "readline";
+import { updateUserProfile } from "../features/userSlice";
 
 // スタイリング
 const useStyles = makeStyles((theme) => ({
@@ -84,8 +85,12 @@ function getModalStyle() {
 
 export const Auth: React.FC = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
+  const [username, setUsername] = useState("");
+
   const [openModal, setOpenModal] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   // ログイン画面と新規登録画面の切り替え
@@ -96,7 +101,15 @@ export const Auth: React.FC = () => {
     await auth.signInWithEmailAndPassword(email, password);
   };
   const signUpEmail = async () => {
-    await auth.createUserWithEmailAndPassword(email, password);
+    const authUser = await auth.createUserWithEmailAndPassword(email, password);
+    await authUser.user?.updateProfile({
+      displayName: username,
+    });
+    dispatch(
+      updateUserProfile({
+        displayName: username,
+      })
+    );
   };
   const signInGoogle = async () => {
     await auth.signInWithPopup(provider).catch((err) => alert(err.message));
@@ -126,6 +139,23 @@ export const Auth: React.FC = () => {
           <Typography component="h1" variant="h5">
             {isLogin ? "ログイン" : "新規登録"}
           </Typography>
+
+          {!isLogin && (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="username"
+              label="ユーザーネーム"
+              id="username"
+              autoComplete="username"
+              value={username}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setUsername(e.target.value)
+              }
+            />
+          )}
 
           {/* Emailとパスワードの認証機能 */}
           <form className={classes.form} noValidate>
@@ -160,6 +190,11 @@ export const Auth: React.FC = () => {
               }
             />
             <Button
+              disabled={
+                isLogin
+                  ? !email || password.length < 6
+                  : !email || password.length < 6 || !username
+              }
               fullWidth
               variant="contained"
               color="primary"
