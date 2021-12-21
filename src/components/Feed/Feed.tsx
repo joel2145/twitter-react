@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { db } from "../../firebase";
 import { TweetInput } from "../TweetInput/TweetInput";
+import { Post } from "../../components/Post/Post";
 import styles from "./Feed.module.css";
 import { Button } from "@material-ui/core";
 import { auth } from "../../firebase";
@@ -23,7 +24,7 @@ const Feed: React.FC = () => {
       .then(() => {
         // console.log("ログアウトしました");
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.log(`ログアウト時にエラーが発生しました (${error})`);
       });
   };
@@ -33,9 +34,9 @@ const Feed: React.FC = () => {
     const unSub = db
       .collection("posts")
       .orderBy("timestamp", "desc")
-      .onSnapshot((snapshot) => {
+      .onSnapshot((snapshot: any) => {
         setPosts(
-          snapshot.docs.map((doc) => ({
+          snapshot.docs.map((doc: any) => ({
             id: doc.id,
             image: doc.data().image,
             text: doc.data().text,
@@ -54,9 +55,20 @@ const Feed: React.FC = () => {
       <p>this is FeedPage</p>
       <TweetInput />
       <Button onClick={() => onClickLogOut()}>ログアウト</Button>
-      {posts.map((post) => (
-        <p key={post.id}>{post.id}</p>
-      ))}
+      {posts[0]?.id && (
+        <>
+          {posts.map((post) => (
+            <Post
+              key={post.id}
+              postId={post.id}
+              image={post.image}
+              text={post.text}
+              timestamp={post.timestamp}
+              username={post.username}
+            ></Post>
+          ))}
+        </>
+      )}
     </div>
   );
 };

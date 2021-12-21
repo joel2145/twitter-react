@@ -15,9 +15,9 @@
   margin-bottom: 5px;
 }
 .post_headerUser {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 18px;
-  color: white;
+  color: rgb(27, 26, 26);
   margin-right: 12px;
 }
 .post_headerTime {
@@ -29,7 +29,7 @@
   font-size: 15px;
 }
 .post_tweet > p {
-  color: whitesmoke;
+  color: rgb(27, 26, 26);
   font-size: 20px;
 }
 .post_tweetImage {

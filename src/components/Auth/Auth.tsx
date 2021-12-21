@@ -112,7 +112,9 @@ export const Auth: React.FC = () => {
     );
   };
   const signInGoogle = async () => {
-    await auth.signInWithPopup(provider).catch((err) => alert(err.message));
+    await auth
+      .signInWithPopup(provider)
+      .catch((err: any) => alert(err.message));
   };
   const sendResetEmail = async () => {
     await auth
@@ -121,7 +123,7 @@ export const Auth: React.FC = () => {
         setOpenModal(false);
         setResetEmail("");
       })
-      .catch((err) => {
+      .catch((err: any) => {
         alert(err.message);
         setResetEmail("");
       });

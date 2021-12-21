@@ -13,7 +13,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // ユーザー情報に何かしらの変化が起こったときに動作する
-    const unSub = auth.onAuthStateChanged((authUser) => {
+    const unSub = auth.onAuthStateChanged((authUser: any) => {
       if (authUser) {
         dispatch(
           login({
