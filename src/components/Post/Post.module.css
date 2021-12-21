@@ -78,10 +78,12 @@
 }
 .post_button {
   border: none;
-  color: whitesmoke;
+  color: #00bfff !important;
   background-color: transparent;
   cursor: pointer;
 }
 .post_buttonDisable {
-  display: none;
+  border: none;
+  color: #afbcc0 !important;
+  background-color: transparent;
 }
