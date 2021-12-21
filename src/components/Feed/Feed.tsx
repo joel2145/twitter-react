@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { db } from "../firebase";
-import { TweetInput } from "./TweetInput";
+import { db } from "../../firebase";
+import { TweetInput } from "../TweetInput/TweetInput";
 import styles from "./Feed.module.css";
 import { Button } from "@material-ui/core";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState([

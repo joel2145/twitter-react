@@ -20,10 +20,10 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import styles from "./Auth.module.scss";
-import { auth, provider, storage } from "../firebase";
+import { auth, provider, storage } from "../../firebase";
 import { setupMaster } from "cluster";
 import { cursorTo } from "readline";
-import { updateUserProfile } from "../features/userSlice";
+import { updateUserProfile } from "../../features/userSlice";
 
 // スタイリング
 const useStyles = makeStyles((theme) => ({

@@ -4,8 +4,8 @@ import firebase from "firebase/app";
 import { Button, IconButton } from "@material-ui/core";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 
-import { auth, db, storage } from "../firebase";
-import { selectUser } from "../features/userSlice";
+import { auth, db, storage } from "../../firebase";
+import { selectUser } from "../../features/userSlice";
 import styles from "./TweetInput.module.css";
 
 export const TweetInput: React.FC = () => {
