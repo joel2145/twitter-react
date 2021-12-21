@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { TweetInput } from "./TweetInput";
 import styles from "./Feed.module.css";
+import { Button } from "@material-ui/core";
+import { auth } from "../firebase";
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState([
@@ -14,6 +16,17 @@ const Feed: React.FC = () => {
       username: "",
     },
   ]);
+
+  const onClickLogOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        // console.log("ログアウトしました");
+      })
+      .catch((error) => {
+        console.log(`ログアウト時にエラーが発生しました (${error})`);
+      });
+  };
 
   // firebaseから投稿のデータを取得する
   useEffect(() => {
@@ -40,7 +53,10 @@ const Feed: React.FC = () => {
     <div className={styles.feed}>
       <p>this is FeedPage</p>
       <TweetInput />
-      {console.log(posts)}
+      <Button onClick={() => onClickLogOut()}>ログアウト</Button>
+      {posts.map((post) => (
+        <p key={post.id}>{post.id}</p>
+      ))}
     </div>
   );
 };
