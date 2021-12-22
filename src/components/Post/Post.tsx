@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import firebase from "firebase/compat/app";
 import { useSelector } from "react-redux";
-import { Button, IconButton, makeStyles } from "@material-ui/core";
+
 import { Send } from "@material-ui/icons";
 import MessageIcon from "@material-ui/icons/Message";
 

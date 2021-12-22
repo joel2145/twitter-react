@@ -4,7 +4,7 @@ import firebase from "firebase/compat/app";
 import { Button, IconButton } from "@material-ui/core";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 
-import { auth, db, storage } from "../../firebase";
+import { db, storage } from "../../firebase";
 import { selectUser } from "../../features/userSlice";
 import styles from "./TweetInput.module.css";
 
