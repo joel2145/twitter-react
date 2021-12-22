@@ -3,6 +3,7 @@ import firebase from "firebase/compat/app";
 import { useSelector } from "react-redux";
 import { Button, IconButton, makeStyles } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
+import MessageIcon from "@material-ui/icons/Message";
 
 import styles from "./Post.module.css";
 import { db } from "../../firebase";
@@ -35,6 +36,7 @@ export const Post: React.FC<Props> = (props) => {
       username: "",
     },
   ]);
+  const [openComments, setOpenComments] = useState(false);
 
   // コメントを表示させる機能
   useEffect(() => {
@@ -90,40 +92,50 @@ export const Post: React.FC<Props> = (props) => {
               <img src={image} alt="tweet" />
             </div>
           )}
+          <MessageIcon
+            className={styles.post_commentIcon}
+            onClick={() => setOpenComments(!openComments)}
+          ></MessageIcon>
 
-          {/* コメント一覧 */}
-          {comments.map((com) => (
-            <div className={styles.post_comment} key={com.id}>
-              <span className={styles.post_commentUser}>@{com.username}</span>
-              <span className={styles.post_commentText}>@{com.text}</span>
-              <span className={styles.post_headerTime}>
-                {new Date(com.timestamp?.toDate()).toLocaleString("ja")}
-              </span>
-            </div>
-          ))}
+          {openComments && (
+            <>
+              {/* コメント一覧 */}
+              {comments.map((com) => (
+                <div className={styles.post_comment} key={com.id}>
+                  <span className={styles.post_commentUser}>
+                    @{com.username}
+                  </span>
+                  <span className={styles.post_commentText}>@{com.text}</span>
+                  <span className={styles.post_headerTime}>
+                    {new Date(com.timestamp?.toDate()).toLocaleString("ja")}
+                  </span>
+                </div>
+              ))}
 
-          {/* 新規コメント機能 */}
-          <form onSubmit={newComment}>
-            <div className={styles.post_form}>
-              <input
-                className={styles.post_input}
-                placeholder="コメントする"
-                type="text"
-                // autoFocus
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              ></input>
-              <button
-                type="submit"
-                disabled={!comment}
-                className={
-                  comment ? styles.post_button : styles.post_buttonDisable
-                }
-              >
-                <Send></Send>
-              </button>
-            </div>
-          </form>
+              {/* 新規コメント機能 */}
+              <form onSubmit={newComment}>
+                <div className={styles.post_form}>
+                  <input
+                    className={styles.post_input}
+                    placeholder="コメントする"
+                    type="text"
+                    // autoFocus
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  ></input>
+                  <button
+                    type="submit"
+                    disabled={!comment}
+                    className={
+                      comment ? styles.post_button : styles.post_buttonDisable
+                    }
+                  >
+                    <Send></Send>
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
         </div>
       </div>
     </>
