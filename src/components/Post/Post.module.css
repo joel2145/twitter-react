@@ -56,12 +56,12 @@
 .post_commentUser {
   font-weight: 600;
   font-size: 16px;
-  color: white;
+  color: rgb(27, 26, 26);
   margin-right: 12px;
 }
 .post_commentText {
   font-size: 15px;
-  color: whitesmoke;
+  color: rgb(27, 26, 26);
   margin-right: 10px;
 }
 .post_form {

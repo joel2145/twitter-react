@@ -16,11 +16,48 @@ interface Props {
   username: string;
 }
 
+interface Comment {
+  id: string;
+  text: string;
+  timestamp: any;
+  username: string;
+}
+
 export const Post: React.FC<Props> = (props) => {
   const { postId, image, text, timestamp, username } = props;
   const user = useSelector(selectUser);
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState<Comment[]>([
+    {
+      id: "",
+      text: "",
+      timestamp: null,
+      username: "",
+    },
+  ]);
 
+  // コメントを表示させる機能
+  useEffect(() => {
+    const unSub = db
+      .collection("posts")
+      .doc(postId)
+      .collection("comments")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot: any) => {
+        setComments(
+          snapshot.docs.map((doc: any) => ({
+            text: doc.data().text,
+            timestamp: doc.data().timestamp,
+            username: doc.data().username,
+          }))
+        );
+      });
+    return () => {
+      unSub();
+    };
+  }, [postId]);
+
+  // firebaseに新規コメントを保存
   const newComment = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -34,8 +71,9 @@ export const Post: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className={styles.post}>
+      <div className={styles.post} key={postId}>
         <div className={styles.post_body}>
+          {/* 投稿 */}
           <div className={styles.post_header}>
             <h3>
               <span className={styles.post_headerUser}>@{username}</span>
@@ -53,7 +91,18 @@ export const Post: React.FC<Props> = (props) => {
             </div>
           )}
 
-          {/* コメント機能 */}
+          {/* コメント一覧 */}
+          {comments.map((com) => (
+            <div className={styles.post_comment} key={com.id}>
+              <span className={styles.post_commentUser}>@{com.username}</span>
+              <span className={styles.post_commentText}>@{com.text}</span>
+              <span className={styles.post_headerTime}>
+                {new Date(com.timestamp?.toDate()).toLocaleString("ja")}
+              </span>
+            </div>
+          ))}
+
+          {/* 新規コメント機能 */}
           <form onSubmit={newComment}>
             <div className={styles.post_form}>
               <input
