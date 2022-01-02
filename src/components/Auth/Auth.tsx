@@ -78,6 +78,7 @@ function getModalStyle() {
   };
 }
 
+// 認証機能
 export const Auth: React.FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
